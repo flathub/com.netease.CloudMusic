@@ -1,7 +1,7 @@
 {
   "app-id": "com.netease.CloudMusic",
   "runtime": "org.freedesktop.Platform",
-  "runtime-version": "18.08",
+  "runtime-version": "21.08",
   "sdk": "org.freedesktop.Sdk",
   "base": "org.videolan.VLC",
   "base-version": "stable",
@@ -54,7 +54,23 @@
             }
         ]
     },
-    
+
+    {
+        "name": "keyutils",
+        "buildsystem": "simple",
+        "build-commands": [
+            "make",
+            "cp -a libkeyutils.so.1* /app/lib"
+        ],
+        "sources" : [
+            {
+                "type": "archive",
+                "url": "http://people.redhat.com/~dhowells/keyutils/keyutils-1.6.tar.bz2",
+                "sha256": "d3aef20cec0005c0fa6b4be40079885567473185b1a57b629b030e67942c7115"
+            }
+        ]
+    },
+
     {
       "name": "clean-vlc",
       "buildsystem": "simple",
@@ -69,55 +85,65 @@
         "rm -rf /app/share/vlc"
       ]
     },
-    
-    {
-    	"name": "CloudMusic",
-    	"only-arches": ["x86_64"],
-    	"buildsystem": "simple",
-    	"build-commands": [
-    		"ln -s /app/extra/netease-cloud-music/usr/bin/netease-cloud-music /app/bin/netease-cloud-music",
-    		
-    		"install -D -m0644 -t /app/share/icons/hicolor/scalable/apps/ com.netease.CloudMusic.svg",
-    		"install -D -m0644 -t /app/share/applications/ com.netease.CloudMusic.desktop",
-    		"install -D -m0644 -t /app/share/metainfo/ com.netease.CloudMusic.appdata.xml",
-    		
-    		"install -D -m0755 -t /app/bin/ apply_extra",
 
-    		"cp /usr/bin/ar /app/bin/",
-    		"cp /usr/lib/x86_64-linux-gnu/libbfd* /app/lib/"
-    		
-    	],
-    	"sources": [
-    		{
-    			"type": "extra-data",
-    			"url": "http://d1.music.126.net/dmusic/netease-cloud-music_1.1.0_amd64_ubuntu.deb",
-    			"sha256": "a256ab183513abcaf26279700aaefb8f6a4da89d9d0a498d35a95d5a7d3a345e",
-    			"filename": "netease-cloud-music.deb",
-    			"size": 68515076
-    		},
-    		{
-    		  "type": "script",
-    		  "commands": [
-    		    "mkdir netease-cloud-music",
-    		    "ar x netease-cloud-music.deb",
-    		    "tar xf data.tar.xz --directory=netease-cloud-music",
-    		    "rm -f netease-cloud-music.deb data.tar.xz control.tar.gz debian-binary"
-    		  ],
-    		  "dest-filename": "apply_extra"
-    		},
-    		{
-    			"type": "file",
-    			"path": "com.netease.CloudMusic.desktop"
-    		},
-    		{
-    			"type": "file",
-    			"path": "com.netease.CloudMusic.svg"
-    		},
-    		{
-    			"type": "file",
-    			"path": "com.netease.CloudMusic.appdata.xml"	
-    		}
-    	]
+    {
+      "name": "CloudMusic",
+      "only-arches": ["x86_64"],
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -D -m0755 -t /app/bin/ netease-cloud-music",
+
+        "install -D -m0644 -t /app/share/icons/hicolor/scalable/apps/ com.netease.CloudMusic.svg",
+        "install -D -m0644 -t /app/share/applications/ com.netease.CloudMusic.desktop",
+        "install -D -m0644 -t /app/share/metainfo/ com.netease.CloudMusic.appdata.xml",
+
+        "install -D -m0755 -t /app/bin/ apply_extra",
+
+        "cp /usr/bin/ar /app/bin/",
+        "cp /usr/lib/x86_64-linux-gnu/libbfd* /app/lib/"
+
+      ],
+      "sources": [
+        {
+          "type": "extra-data",
+          "url": "http://d1.music.126.net/dmusic/netease-cloud-music_1.2.1_amd64_ubuntu_20190428.deb",
+          "sha256": "1ee9f02842e6c2c8c79c48b2e932074f9c213a8eb4238e5e63f20438562fecbb",
+          "filename": "netease-cloud-music.deb",
+          "size": 104501260
+        },
+        {
+          "type": "script",
+          "commands": [
+            "mkdir netease-cloud-music",
+            "ar x netease-cloud-music.deb",
+            "tar xf data.tar.xz --directory=netease-cloud-music",
+            "ln -sf ../../opt/netease/netease-cloud-music/netease-cloud-music.bash netease-cloud-music/usr/bin/netease-cloud-music",
+            "rm -f netease-cloud-music.deb data.tar.xz control.tar.* debian-binary"
+          ],
+          "dest-filename": "apply_extra"
+        },
+        {
+          "type": "script",
+          "commands": [
+              "mkdir -p /opt/netease/netease-cloud-music/libs",
+              "ln -s /app/extra/netease-cloud-music/opt/netease/netease-cloud-music/libs/qcef /opt/netease/netease-cloud-music/libs/qcef",
+              "exec /app/extra/netease-cloud-music/usr/bin/netease-cloud-music $@"
+          ],
+          "dest-filename": "netease-cloud-music"
+        },
+        {
+          "type": "file",
+          "path": "com.netease.CloudMusic.desktop"
+        },
+        {
+          "type": "file",
+          "path": "com.netease.CloudMusic.svg"
+        },
+        {
+          "type": "file",
+          "path": "com.netease.CloudMusic.appdata.xml"
+        }
+      ]
     }
   ]
 }
