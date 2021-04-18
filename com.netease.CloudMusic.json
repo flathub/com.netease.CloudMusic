@@ -1,7 +1,7 @@
 {
   "app-id": "com.netease.CloudMusic",
   "runtime": "org.freedesktop.Platform",
-  "runtime-version": "19.08",
+  "runtime-version": "20.08",
   "sdk": "org.freedesktop.Sdk",
   "base": "org.videolan.VLC",
   "base-version": "stable",
