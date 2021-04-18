@@ -50,6 +50,7 @@
     <content_attribute id="money-purchasing">intense</content_attribute>
   </content_rating>
   <releases>
+    <release type="stable" date="2019-04-28" version="1.2.1" />
     <release type="stable" date="2019-03-12" version="1.1.0" />
   </releases>
 </component>
