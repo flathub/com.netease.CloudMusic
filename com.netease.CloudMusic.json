@@ -33,44 +33,30 @@
     "*.la",
     "*.a"
   ],
-
-  "build-options": {
-    "env": {
-      "V": "1"
-    }
-  },
   "modules": [
     "shared-modules/gtk2/gtk2.json",
-    "shared-modules/dbus-glib/dbus-glib-0.110.json",
-
-    {
-        "name": "gconf",
-        "config-opts": ["--disable-orbit"],
-        "sources" : [
-            {
-                "type": "archive",
-                "url": "http://ftp.gnome.org/pub/GNOME/sources/GConf/3.2/GConf-3.2.6.tar.xz",
-                "sha256": "1912b91803ab09a5eed34d364bf09fe3a2a9c96751fde03a4e0cfa51a04d784c"
-            }
-        ]
-    },
-
     {
         "name": "keyutils",
         "buildsystem": "simple",
         "build-commands": [
-            "make",
-            "cp -a libkeyutils.so.1* /app/lib"
+            "sed -i 's|$(LNS) $(LIBDIR)/|$(LNS) |' Makefile && make DESTDIR=/app LIBDIR=/lib NO_ARLIB=1 install"
         ],
         "sources" : [
             {
                 "type": "archive",
-                "url": "http://people.redhat.com/~dhowells/keyutils/keyutils-1.6.tar.bz2",
-                "sha256": "d3aef20cec0005c0fa6b4be40079885567473185b1a57b629b030e67942c7115"
+                "url": "https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/snapshot/keyutils-1.6.3.tar.gz",
+                "sha256": "a61d5706136ae4c05bd48f86186bcfdbd88dd8bd5107e3e195c924cfc1b39bb4"
             }
+        ],
+        "cleanup": [
+          "/bin",
+          "/etc",
+          "/sbin",
+          "/usr",
+          "/share/request-key-debug.sh",
+          "/share/man"
         ]
     },
-
     {
       "name": "clean-vlc",
       "buildsystem": "simple",
@@ -85,23 +71,18 @@
         "rm -rf /app/share/vlc"
       ]
     },
-
     {
       "name": "CloudMusic",
       "only-arches": ["x86_64"],
       "buildsystem": "simple",
       "build-commands": [
-        "install -D -m0755 -t /app/bin/ netease-cloud-music",
-
-        "install -D -m0644 -t /app/share/icons/hicolor/scalable/apps/ com.netease.CloudMusic.svg",
-        "install -D -m0644 -t /app/share/applications/ com.netease.CloudMusic.desktop",
-        "install -D -m0644 -t /app/share/metainfo/ com.netease.CloudMusic.appdata.xml",
-
-        "install -D -m0755 -t /app/bin/ apply_extra",
-
-        "cp /usr/bin/ar /app/bin/",
-        "cp /usr/lib/x86_64-linux-gnu/libbfd* /app/lib/"
-
+        "install -Dm0755 -t ${FLATPAK_DEST}/bin/ netease-cloud-music",
+        "install -Dm0644 -t ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/ com.netease.CloudMusic.svg",
+        "install -Dm0644 -t ${FLATPAK_DEST}/share/applications/ com.netease.CloudMusic.desktop",
+        "install -Dm0644 -t ${FLATPAK_DEST}/share/metainfo/ com.netease.CloudMusic.appdata.xml",
+        "install -D m0755 -t ${FLATPAK_DEST}/bin/ apply_extra",
+        "cp /usr/bin/ar ${FLATPAK_DEST}/bin/",
+        "cp /usr/lib/x86_64-linux-gnu/libbfd* ${FLATPAK_DEST}/lib/"
       ],
       "sources": [
         {
@@ -118,7 +99,7 @@
             "ar x netease-cloud-music.deb",
             "tar xf data.tar.xz --directory=netease-cloud-music",
             "ln -sf ../../opt/netease/netease-cloud-music/netease-cloud-music.bash netease-cloud-music/usr/bin/netease-cloud-music",
-            "rm -f netease-cloud-music.deb data.tar.xz control.tar.* debian-binary"
+            "rm -f netease-cloud-music.deb data.tar.xz control.tar.xz debian-binary"
           ],
           "dest-filename": "apply_extra"
         },
