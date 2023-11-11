@@ -60,6 +60,12 @@
       "name": "clean-vlc",
       "buildsystem": "simple",
       "build-commands": [
+        "rm -rf /app/include",
+        "rm -rf /app/lib/ckport",
+        "rm -rf /app/lib/cmake",
+        "rm -rf /app/lib/lua",
+        "rm -rf /app/lib/pkgconfig",
+        "rm -rf /app/lib/udev",
         "rm -rf /app/share/appdata",
         "rm -rf /app/share/app-info",
         "rm -rf /app/share/applications",
@@ -67,7 +73,13 @@
         "rm -rf /app/share/kde4",
         "rm -rf /app/share/locale",
         "rm -rf /app/share/runtime",
-        "rm -rf /app/share/vlc"
+        "rm -rf /app/share/vlc",
+        "rm -rf /app/include",
+        "rm -rf /app/share/aclocal",
+        "rm -rf /app/share/ffmpeg",
+        "rm -rf /app/share/gir-1.0",
+        "rm -rf /app/share/libcaca",
+        "rm -rf /app/share/lua"
       ]
     },
     {
